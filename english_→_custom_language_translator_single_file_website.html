@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>English → Your Language — Quick Translator</title>
+  <style>
+    :root{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+    body{display:flex;min-height:100vh;align-items:center;justify-content:center;background:#0f172a;color:#e6eef8;margin:0;padding:28px}
+    .card{width:900px;max-width:95vw;background:linear-gradient(180deg,#0b1220, #071029);padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    h1{margin:0 0 8px;font-size:20px}
+    p.small{margin:0 0 16px;color:#9fb0d6}
+    textarea{width:100%;min-height:160px;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:#061124;color:inherit;font-size:15px}
+    .row{display:flex;gap:10px;align-items:center;margin-top:12px}
+    button{background:#2563eb;border:none;padding:8px 12px;border-radius:8px;color:white;cursor:pointer}
+    button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+    .output{white-space:pre-wrap;padding:12px;margin-top:12px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);min-height:120px}
+    .hint{font-size:13px;color:#98b4dc;margin-top:10px}
+    .examples{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .chip{background:#081628;padding:6px 8px;border-radius:999px;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    footer{margin-top:12px;color:#7f9fc9;font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>English → Your Language (Rule-based)</h1>
+    <p class="small">This page applies your 3-step transform to each English word:
+      <ol>
+        <li>Flip last letter to the front</li>
+        <li>Flip the middle letter to the front</li>
+        <li>Insert an "x" in the middle of the word</li>
+      </ol>
+    </p>
+
+    <textarea id="input" placeholder="Enter English text here... e.g. Hello world!" spellcheck="false">Hello world! This is a test of your custom translator.</textarea>
+
+    <div class="row">
+      <button id="translate">Translate</button>
+      <button id="clear" class="secondary">Clear</button>
+      <button id="copy" class="secondary">Copy result</button>
+      <div style="margin-left:auto;color:#9fb0d6">Example: <strong>"Hello" → "oHxlle"</strong></div>
+    </div>
+
+    <div class="output" id="output" aria-live="polite"></div>
+
+    <div class="hint">Notes: punctuation is preserved, capitalization is kept (if a word starts with uppercase it will remain capitalized), and all-ALLCAP words stay uppercase.</div>
+
+    <div class="examples">
+      <div class="chip" data-text="Hello world!">Hello world!</div>
+      <div class="chip" data-text="Programming is fun.">Programming is fun.</div>
+      <div class="chip" data-text="I love pizza.">I love pizza.</div>
+      <div class="chip" data-text="Roblox scripts and games">Roblox scripts and games</div>
+    </div>
+
+    <footer>Built just for you — tweak the rules inside the code to change how words are transformed.</footer>
+  </div>
+
+  <script>
+    // Transform a single word using the 3 steps described by the user.
+    function transformSingleWord(original) {
+      if (original.length === 0) return original;
+
+      // Helper: detect casing styles
+      const isAllUpper = original === original.toUpperCase();
+      const isCapitalized = original[0] === original[0].toUpperCase() && !isAllUpper;
+
+      // operate on lowercased letters to make steps deterministic, then restore case
+      let w = original.toLowerCase();
+
+      // Step 1: flip last letter to front
+      if (w.length >= 2) {
+        w = w[w.length - 1] + w.slice(0, -1);
+      }
+
+      // Step 2: flip middle letter to front
+      if (w.length >= 2) {
+        const mid = Math.floor(w.length / 2); // left-biased for even lengths
+        const midChar = w[mid];
+        w = midChar + w.slice(0, mid) + w.slice(mid + 1);
+      }
+
+      // Step 3: add 'x' in the middle
+      const insertAt = Math.floor(w.length / 2);
+      w = w.slice(0, insertAt) + 'x' + w.slice(insertAt);
+
+      // restore capitalization
+      if (isAllUpper) {
+        w = w.toUpperCase();
+      } else if (isCapitalized) {
+        w = w[0].toUpperCase() + w.slice(1);
+      }
+
+      return w;
+    }
+
+    // Main translator: replaces alphabetic words while preserving punctuation and spaces
+    function translateText(text) {
+      // Use regex to find word tokens (letters only). This leaves punctuation and numbers alone.
+      return text.replace(/\b([A-Za-z]+)\b/g, (match) => transformSingleWord(match));
+    }
+
+    // UI wiring
+    const inputEl = document.getElementById('input');
+    const outputEl = document.getElementById('output');
+    document.getElementById('translate').addEventListener('click', () => {
+      outputEl.textContent = translateText(inputEl.value);
+    });
+    document.getElementById('clear').addEventListener('click', () => { inputEl.value = ''; outputEl.textContent = ''; });
+
+    document.getElementById('copy').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(outputEl.textContent);
+        alert('Result copied to clipboard');
+      } catch (e) {
+        alert('Copy failed — select and copy manually');
+      }
+    });
+
+    // example chips
+    document.querySelectorAll('.chip').forEach(el => el.addEventListener('click', () => {
+      inputEl.value = el.dataset.text;
+      outputEl.textContent = translateText(inputEl.value);
+    }));
+
+    // initial render
+    outputEl.textContent = translateText(inputEl.value);
+  </script>
+</body>
+</html>

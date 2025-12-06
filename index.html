@@ -3,236 +3,127 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ergbergderggurgen Translator</title>
-  <meta name="description" content="Translate English to Ergbergderggurgen using a simple 3-step rule set." />
+  <title>English → Your Language — Quick Translator</title>
   <style>
-    :root{--bg:#0b1220;--card:#071029;--muted:#9fb0d6;--accent:#6ee7b7;--glass:rgba(255,255,255,0.03);--glass-2:rgba(255,255,255,0.02)}
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;color:#e6eef8;background:linear-gradient(180deg,var(--bg),#020614)}
-    .wrap{max-width:980px;margin:28px auto;padding:22px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);box-shadow:0 10px 40px rgba(2,6,23,0.6);border:1px solid var(--glass)}
-    header{display:flex;align-items:center;gap:14px}
-    .logo{width:56px;height:56px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,#09203a,#0b6b6b);box-shadow:inset 0 -6px 12px rgba(0,0,0,0.3)}
-    .logo svg{width:40px;height:40px}
-    h1{font-size:20px;margin:0}
-    .sub{color:var(--muted);font-size:13px;margin-top:4px}
-
-    main{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:18px}
-    @media (max-width:900px){main{grid-template-columns:1fr}}
-
-    .card{background:linear-gradient(180deg,var(--card),rgba(2,6,23,0.2));padding:14px;border-radius:12px;border:1px solid var(--glass-2)}
-    textarea{width:100%;min-height:180px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit;font-size:15px;resize:vertical}
-    .controls{display:flex;gap:10px;align-items:center;margin-top:10px}
-    .btn{background:#2563eb;border:none;color:white;padding:9px 12px;border-radius:10px;cursor:pointer;font-weight:600}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.05)}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-
-    .output{white-space:pre-wrap;padding:12px;border-radius:10px;min-height:140px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);font-size:15px;border:1px solid rgba(255,255,255,0.02);margin-top:10px}
-
-    .panel h3{margin:4px 0 8px;font-size:15px}
-    .muted{color:var(--muted);font-size:13px}
-    .chip{display:inline-block;padding:8px 10px;border-radius:999px;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid rgba(255,255,255,0.02);font-size:13px;margin:6px 6px 0 0}
-
-    .rule-list{font-size:13px;color:var(--muted);line-height:1.5}
-    footer{margin-top:12px;color:var(--muted);font-size:13px}
-
-    .toggles{margin-left:auto;display:flex;gap:8px;align-items:center}
-    .small{font-size:13px}
-
-    /* subtle animations */
-    .logo, .card, textarea, .btn{transition:transform .18s ease, box-shadow .18s ease}
-    .chip:hover{transform:translateY(-3px)}
-
-    .credit{font-size:12px;color:#88a6d0;margin-top:8px}
+    :root{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+    body{display:flex;min-height:100vh;align-items:center;justify-content:center;background:#0f172a;color:#e6eef8;margin:0;padding:28px}
+    .card{width:900px;max-width:95vw;background:linear-gradient(180deg,#0b1220, #071029);padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    h1{margin:0 0 8px;font-size:20px}
+    p.small{margin:0 0 16px;color:#9fb0d6}
+    textarea{width:100%;min-height:160px;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:#061124;color:inherit;font-size:15px}
+    .row{display:flex;gap:10px;align-items:center;margin-top:12px}
+    button{background:#2563eb;border:none;padding:8px 12px;border-radius:8px;color:white;cursor:pointer}
+    button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+    .output{white-space:pre-wrap;padding:12px;margin-top:12px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);min-height:120px}
+    .hint{font-size:13px;color:#98b4dc;margin-top:10px}
+    .examples{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .chip{background:#081628;padding:6px 8px;border-radius:999px;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    footer{margin-top:12px;color:#7f9fc9;font-size:13px}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="logo" aria-hidden="true">
-        <!-- simple mark: E inside a circle style -->
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ergbergderggurgen logo">
-          <rect x="4" y="4" width="56" height="56" rx="10" fill="url(#g)"/>
-          <defs>
-            <linearGradient id="g" x1="0" x2="1">
-              <stop offset="0" stop-color="#0f5b7a"/>
-              <stop offset="1" stop-color="#0b2d4a"/>
-            </linearGradient>
-          </defs>
-          <path d="M20 18h24v4H26v8h14v4H26v12H20V18z" fill="#dff8ee"/>
-        </svg>
-      </div>
-      <div>
-        <h1>Ergbergderggurgen Translator</h1>
-        <div class="sub">Translate English → Ergbergderggurgen using your 3-step ruleset</div>
-      </div>
-      <div class="toggles">
-        <div class="small muted">Dark</div>
-      </div>
-    </header>
+  <div class="card">
+    <h1>English → Your Language (Rule-based)</h1>
+    <p class="small">This page applies your 3-step transform to each English word:
+      <ol>
+        <li>Flip last letter to the front</li>
+        <li>Flip the middle letter to the front</li>
+        <li>Insert an "x" in the middle of the word</li>
+      </ol>
+    </p>
 
-    <main>
-      <section>
-        <div class="card">
-          <label for="input" class="muted">English input</label>
-          <textarea id="input" spellcheck="false">Hello world! This is a test of Ergbergderggurgen.</textarea>
+    <textarea id="input" placeholder="Enter English text here... e.g. Hello world!" spellcheck="false">Hello world! This is a test of your custom translator.</textarea>
 
-          <div class="controls">
-            <div class="actions">
-              <button class="btn" id="translate">Translate</button>
-              <button class="btn ghost" id="clear">Clear</button>
-              <button class="btn ghost" id="copy">Copy</button>
-              <button class="btn ghost" id="download">Download HTML</button>
-            </div>
-            <div style="margin-left:auto;text-align:right">
-              <div class="muted small">Language: <strong>Ergbergderggurgen</strong></div>
-              <div class="muted small">Rules: Flip last → Flip middle → Insert 'x' in middle</div>
-            </div>
-          </div>
+    <div class="row">
+      <button id="translate">Translate</button>
+      <button id="clear" class="secondary">Clear</button>
+      <button id="copy" class="secondary">Copy result</button>
+      <div style="margin-left:auto;color:#9fb0d6">Example: <strong>"Hello" → "oHxlle"</strong></div>
+    </div>
 
-          <div class="output" id="output" aria-live="polite"></div>
+    <div class="output" id="output" aria-live="polite"></div>
 
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
-            <div class="chip" data-example="Hello world!">Hello world!</div>
-            <div class="chip" data-example="Programming is fun.">Programming is fun.</div>
-            <div class="chip" data-example="I love pizza.">I love pizza.</div>
-            <div class="chip" data-example="Roblox scripts and games">Roblox scripts and games</div>
-          </div>
+    <div class="hint">Notes: punctuation is preserved, capitalization is kept (if a word starts with uppercase it will remain capitalized), and all-ALLCAP words stay uppercase.</div>
 
-        </div>
+    <div class="examples">
+      <div class="chip" data-text="Hello world!">Hello world!</div>
+      <div class="chip" data-text="Programming is fun.">Programming is fun.</div>
+      <div class="chip" data-text="I love pizza.">I love pizza.</div>
+      <div class="chip" data-text="Roblox scripts and games">Roblox scripts and games</div>
+    </div>
 
-        <div class="card" style="margin-top:12px">
-          <h3>About Ergbergderggurgen</h3>
-          <div class="rule-list">
-            <ol>
-              <li>Flip the last letter to the front of the word.</li>
-              <li>Flip the middle letter to the front (left-biased for even-length words).</li>
-              <li>Insert the letter <code>x</code> in the middle of the resulting word.</li>
-            </ol>
-            <div class="muted">Only alphabetic words are transformed. Punctuation and numbers are preserved.</div>
-          </div>
-        </div>
-
-      </section>
-
-      <aside>
-        <div class="card panel">
-          <h3>Preview & settings</h3>
-          <div class="muted">Transform preview and helpful toggles.</div>
-
-          <div style="margin-top:10px">
-            <label class="muted small">Case handling</label>
-            <div class="muted small">Capitalization and ALL-CAPS are preserved automatically.</div>
-          </div>
-
-          <div style="margin-top:12px">
-            <label class="muted small">Quick preview</label>
-            <div id="mini" class="muted" style="padding:8px 6px;margin-top:6px;background:rgba(255,255,255,0.02);border-radius:8px;min-height:48px"></div>
-          </div>
-
-          <div style="margin-top:12px">
-            <label class="muted small">Examples</label>
-            <div style="margin-top:8px">
-              <div class="chip" id="ex1">Example 1</div>
-              <div class="chip" id="ex2">Example 2</div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px">
-            <label class="muted small">Deploy tip</label>
-            <div class="muted small">Rename this file to <code>index.html</code> and upload it to the root of your GitHub repo. Then enable Pages on branch <code>main</code>.</div>
-          </div>
-
-          <div class="credit">Built for: <strong>Ergbergderggurgen</strong> — ready for GitHub Pages</div>
-        </div>
-
-      </aside>
-    </main>
-
-    <footer>
-      <div class="muted small">If your GitHub Pages shows 404 after uploading, make sure the file is named <code>index.html</code> and located in the repo root, not inside a folder. You can also add an empty <code>.nojekyll</code> file to force a rebuild.</div>
-    </footer>
+    <footer>Built just for you — tweak the rules inside the code to change how words are transformed.</footer>
   </div>
 
-<script>
-  // ------- Core transform logic -------
-  function transformSingleWord(original) {
-    if (!original || original.length === 0) return original;
+  <script>
+    // Transform a single word using the 3 steps described by the user.
+    function transformSingleWord(original) {
+      if (original.length === 0) return original;
 
-    const isAllUpper = original === original.toUpperCase();
-    const isCapitalized = original[0] === original[0].toUpperCase() && !isAllUpper;
+      // Helper: detect casing styles
+      const isAllUpper = original === original.toUpperCase();
+      const isCapitalized = original[0] === original[0].toUpperCase() && !isAllUpper;
 
-    // operate on letters only
-    let w = original.toLowerCase();
+      // operate on lowercased letters to make steps deterministic, then restore case
+      let w = original.toLowerCase();
 
-    // Step 1: flip last letter to front
-    if (w.length >= 2) {
-      w = w[w.length - 1] + w.slice(0, -1);
+      // Step 1: flip last letter to front
+      if (w.length >= 2) {
+        w = w[w.length - 1] + w.slice(0, -1);
+      }
+
+      // Step 2: flip middle letter to front
+      if (w.length >= 2) {
+        const mid = Math.floor(w.length / 2); // left-biased for even lengths
+        const midChar = w[mid];
+        w = midChar + w.slice(0, mid) + w.slice(mid + 1);
+      }
+
+      // Step 3: add 'x' in the middle
+      const insertAt = Math.floor(w.length / 2);
+      w = w.slice(0, insertAt) + 'x' + w.slice(insertAt);
+
+      // restore capitalization
+      if (isAllUpper) {
+        w = w.toUpperCase();
+      } else if (isCapitalized) {
+        w = w[0].toUpperCase() + w.slice(1);
+      }
+
+      return w;
     }
 
-    // Step 2: flip middle letter to front (left-biased)
-    if (w.length >= 2) {
-      const mid = Math.floor(w.length / 2);
-      const midChar = w[mid];
-      w = midChar + w.slice(0, mid) + w.slice(mid + 1);
+    // Main translator: replaces alphabetic words while preserving punctuation and spaces
+    function translateText(text) {
+      // Use regex to find word tokens (letters only). This leaves punctuation and numbers alone.
+      return text.replace(/\b([A-Za-z]+)\b/g, (match) => transformSingleWord(match));
     }
 
-    // Step 3: insert 'x' in the middle
-    const insertAt = Math.floor(w.length / 2);
-    w = w.slice(0, insertAt) + 'x' + w.slice(insertAt);
+    // UI wiring
+    const inputEl = document.getElementById('input');
+    const outputEl = document.getElementById('output');
+    document.getElementById('translate').addEventListener('click', () => {
+      outputEl.textContent = translateText(inputEl.value);
+    });
+    document.getElementById('clear').addEventListener('click', () => { inputEl.value = ''; outputEl.textContent = ''; });
 
-    // restore casing
-    if (isAllUpper) {
-      w = w.toUpperCase();
-    } else if (isCapitalized) {
-      w = w[0].toUpperCase() + w.slice(1);
-    }
-    return w;
-  }
+    document.getElementById('copy').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(outputEl.textContent);
+        alert('Result copied to clipboard');
+      } catch (e) {
+        alert('Copy failed — select and copy manually');
+      }
+    });
 
-  // translate text while preserving punctuation and numbers
-  function translateText(text) {
-    return text.replace(/\b([A-Za-z]+)\b/g, (m) => transformSingleWord(m));
-  }
+    // example chips
+    document.querySelectorAll('.chip').forEach(el => el.addEventListener('click', () => {
+      inputEl.value = el.dataset.text;
+      outputEl.textContent = translateText(inputEl.value);
+    }));
 
-  // ------- UI wiring -------
-  const inputEl = document.getElementById('input');
-  const outputEl = document.getElementById('output');
-  const mini = document.getElementById('mini');
-
-  function render() {
+    // initial render
     outputEl.textContent = translateText(inputEl.value);
-    // mini preview: first sentence transformed
-    const first = (inputEl.value || '').split(/[.!?]\s/)[0] || '';
-    mini.textContent = first ? translateText(first) : 'Type anything to preview';
-  }
-
-  document.getElementById('translate').addEventListener('click', render);
-  document.getElementById('clear').addEventListener('click', () => { inputEl.value = ''; render(); });
-
-  document.getElementById('copy').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(outputEl.textContent); alert('Copied to clipboard'); } catch (e) { alert('Copy failed — select and copy manually'); }
-  });
-
-  // download current page as HTML (single-file)
-  document.getElementById('download').addEventListener('click', () => {
-    const html = document.documentElement.outerHTML;
-    const blob = new Blob([html], {type:'text/html'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'index.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  });
-
-  // example chips
-  document.querySelectorAll('.chip[data-example]').forEach(el => el.addEventListener('click', () => { inputEl.value = el.dataset.example; render(); }));
-
-  document.getElementById('ex1').addEventListener('click', () => { inputEl.value='Hello world!'; render(); });
-  document.getElementById('ex2').addEventListener('click', () => { inputEl.value='Programming is fun.'; render(); });
-
-  // live typing
-  inputEl.addEventListener('input', () => { render(); });
-
-  // initial render
-  render();
-</script>
+  </script>
 </body>
 </html>

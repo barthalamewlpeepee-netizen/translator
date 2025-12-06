@@ -5,107 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ergbergderggurgen Translator</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
     body {
+      background: linear-gradient(145deg, #1b2b44, #0b0f19);
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
-      transition: background 0.5s, color 0.5s;
+      color: #fff;
     }
-
-    /* Animated scrolling background */
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, #5fb1ff, #8d50ff, #ff4fd8, #ff8850);
-      background-size: 400% 400%;
-      animation: scrollBg 15s infinite linear;
-      z-index: -1;
-      filter: blur(40px);
+    .card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      padding: 35px;
+      border-radius: 22px;
+      width: 480px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.2);
     }
-
-    @keyframes scrollBg {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(-50%, -50%); }
+    h1 {
+      text-align: center;
+      margin-bottom: 22px;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 6px #4bb7ff;
     }
-
-    /* Translator Box */
-    .box {
-      width: 60%;
-      max-width: 600px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      border-radius: 15px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    }
-
     textarea {
       width: 100%;
       height: 120px;
       border: none;
-      border-radius: 10px;
-      padding: 10px;
-      font-size: 1rem;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 16px;
       resize: none;
-      backdrop-filter: blur(5px);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      margin-bottom: 15px;
     }
-
     button.translate {
-      margin-top: 15px;
       width: 100%;
-      padding: 12px;
-      font-size: 1.1rem;
+      padding: 14px;
+      font-size: 18px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      background: #ffffff;
-      transition: 0.3s;
+      background: linear-gradient(135deg, #00aaff, #0077cc);
+      color: white;
+      transition: 0.25s;
     }
-
     button.translate:hover {
-      background: #e3e3e3;
+      transform: scale(1.05);
+      filter: brightness(1.1);
     }
-
-    /* Light / Dark mode buttons */
-    .modeButtons {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .modeButtons button {
-      padding: 8px 14px;
-      font-size: 0.9rem;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      background: white;
+    .output {
+      width: 100%;
+      height: 120px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 17px;
+      overflow-y: auto;
+      color: white;
     }
   </style>
 </head>
 <body>
-
-  <div class="modeButtons">
-    <button onclick="setLight()">Light Mode</button>
-    <button onclick="setDark()">Dark Mode</button>
-  </div>
-
-  <div class="box">
+  <div class="card">
+    <h1>Ergbergderggurgen Translator</h1>
     <textarea id="inputText" placeholder="Enter English text..."></textarea>
     <button class="translate" onclick="translateText()">Translate</button>
     <textarea id="outputText" placeholder="Translated text..." readonly></textarea>
@@ -114,8 +81,8 @@
   <script>
     function translateWord(word) {
       if (word.length < 2) return word;
-      const last = word[word.length - 1];
-      const mid = word[Math.floor(word.length / 2)];
+      const last = word.charAt(word.length - 1);
+      const mid = word.charAt(Math.floor(word.length / 2));
       const middleIndex = Math.floor(word.length / 2);
       let withoutLast = word.slice(0, word.length - 1);
       let withoutMid = withoutLast.slice(0, middleIndex) + withoutLast.slice(middleIndex + 1);
@@ -130,17 +97,6 @@
       let translated = words.map(w => w.trim().length > 0 ? translateWord(w) : w).join("");
       document.getElementById("outputText").value = translated;
     }
-
-    function setLight() {
-      document.body.style.color = "black";
-      document.body.style.background = "#f7f7f7";
-    }
-
-    function setDark() {
-      document.body.style.color = "white";
-      document.body.style.background = "#0f0f0f";
-    }
   </script>
-
 </body>
 </html>
